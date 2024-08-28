@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-#import scipy
-pip install plotly scipy
 
 import matplotlib.pyplot as plt
 import plotly.express as px
