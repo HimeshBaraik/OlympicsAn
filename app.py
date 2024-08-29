@@ -130,14 +130,38 @@ if user_menu == 'Athlete wise Analysis':
     x2 = athlete_df[athlete_df['Medal'] == 'Gold']['Age'].dropna()
     x3 = athlete_df[athlete_df['Medal'] == 'Silver']['Age'].dropna()
     x4 = athlete_df[athlete_df['Medal'] == 'Bronze']['Age'].dropna()
+    
+    # Plot KDE for each category
+    plt.figure(figsize=(10, 6))
+    sns.kdeplot(x1, label='Overall Age', shade=True)
+    sns.kdeplot(x2, label='Gold Medalist', shade=True)
+    sns.kdeplot(x3, label='Silver Medalist', shade=True)
+    sns.kdeplot(x4, label='Bronze Medalist', shade=True)
+    
+    # Customize plot
+    plt.title('Distribution of Age')
+    plt.xlabel('Age')
+    plt.ylabel('Density')
+    plt.legend()
 
-    fig = ff.create_distplot([x1, x2, x3, x4], ['Overall Age', 'Gold Medalist', 'Silver Medalist', 'Bronze Medalist'],show_hist=False, show_rug=False)
-    fig.update_layout(autosize=False,width=1000,height=600)
     st.title("Distribution of Age")
-    st.plotly_chart(fig)
+    st.pyplot(plt)
 
-    st.write("")
-    st.write("")
+    
+
+    #athlete_df = df.drop_duplicates(subset=['Name', 'region'])
+    #x1 = athlete_df['Age'].dropna()
+    #x2 = athlete_df[athlete_df['Medal'] == 'Gold']['Age'].dropna()
+    # x3 = athlete_df[athlete_df['Medal'] == 'Silver']['Age'].dropna()
+    # x4 = athlete_df[athlete_df['Medal'] == 'Bronze']['Age'].dropna()
+
+    # fig = ff.create_distplot([x1, x2, x3, x4], ['Overall Age', 'Gold Medalist', 'Silver Medalist', 'Bronze Medalist'],show_hist=False, show_rug=False)
+    # fig.update_layout(autosize=False,width=1000,height=600)
+    # st.title("Distribution of Age")
+    # st.plotly_chart(fig)
+
+    # st.write("")
+    # st.write("")
 
     ################################################
 
