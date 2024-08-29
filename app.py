@@ -188,26 +188,22 @@ if user_menu == 'Athlete wise Analysis':
             name.append(sport)
     
     # Create a new figure
-    fig = go.Figure()
+    plt.figure(figsize=(12, 8))
     
-    # Add KDE traces for each sport
+    # Plot KDE for each sport
     for ages, sport_name in zip(x, name):
-        # Use Plotly Express to get KDE data
-        kde_data = px.line(x=ages, y='density').data[0]
-        fig.add_trace(go.Scatter(x=kde_data.x, y=kde_data.y, mode='lines', name=sport_name))
+        sns.kdeplot(ages, label=sport_name, shade=True)
     
-    # Update layout to customize the plot
-    fig.update_layout(title='Distribution of Age of Gold Medalists by Sport',
-                      xaxis_title='Age',
-                      yaxis_title='Density',
-                      autosize=False,
-                      width=1000,
-                      height=600)
+    # Customize plot
+    plt.title('Distribution of Age of Gold Medalists by Sport')
+    plt.xlabel('Age')
+    plt.ylabel('Density')
+    plt.legend(title='Sport')
     
     # Show plot in Streamlit
     st.title("Distribution of Age wrt Sports (Gold Medalist)")
-    st.plotly_chart(fig)
-    
+    st.pyplot(plt)
+        
 
     # x = []
     # name = []
