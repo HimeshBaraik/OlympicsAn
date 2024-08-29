@@ -57,16 +57,17 @@ def most_successful(df, sport):
     if sport != 'Overall':
         temp_df = temp_df[temp_df['Sport'] == sport]
     
-    # Count the number of medals by 'Name' and reset the index to make it a column
-    x = temp_df['Name'].value_counts().reset_index()
+    # Count the number of medals by 'Name' and reset the index to create a 'Name' column
+    medal_count = temp_df['Name'].value_counts().reset_index()
+    
+    # Rename columns to make sure they have proper names for merging
+    medal_count.columns = ['Name', 'Medals']
 
     # Merge with the original dataframe on 'Name'
-    x = x.merge(df, left_on='index', right_on='Name', how='left')[['index', 'Name_x', 'Sport', 'region']].drop_duplicates('index')
-
-    # Rename the columns for clarity
-    x.rename(columns={'index': 'Name', 'Name_x': 'Medals'}, inplace=True)
+    x = medal_count.merge(df, on='Name', how='left')[['Name', 'Medals', 'Sport', 'region']].drop_duplicates('Name')
     
     return x
+
 
 
 def weight_v_height(df,sport):
