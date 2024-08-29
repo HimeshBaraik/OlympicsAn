@@ -3,6 +3,7 @@ import pandas as pd
 
 import matplotlib.pyplot as plt
 import plotly.express as px
+import plotly.graph_objects as go
 import plotly.figure_factory as ff
 import seaborn as sns
 
@@ -165,6 +166,7 @@ if user_menu == 'Athlete wise Analysis':
 
     ################################################
 
+
     x = []
     name = []
     famous_sports = ['Basketball', 'Judo', 'Football', 'Tug-Of-War', 'Athletics',
@@ -176,15 +178,57 @@ if user_menu == 'Athlete wise Analysis':
                      'Volleyball', 'Synchronized Swimming', 'Table Tennis', 'Baseball',
                      'Rhythmic Gymnastics', 'Rugby Sevens',
                      'Beach Volleyball', 'Triathlon', 'Rugby', 'Polo', 'Ice Hockey']
+    
+    # Collect age data for Gold Medalists in each sport
     for sport in famous_sports:
         temp_df = athlete_df[athlete_df['Sport'] == sport]
-        x.append(temp_df[temp_df['Medal'] == 'Gold']['Age'].dropna())
-        name.append(sport)
-
-    fig = ff.create_distplot(x, name, show_hist=False, show_rug=False)
-    fig.update_layout(autosize=False, width=1000, height=600)
-    st.title("Distribution of Age wrt Sports(Gold Medalist)")
+        gold_medal_ages = temp_df[temp_df['Medal'] == 'Gold']['Age'].dropna()
+        if not gold_medal_ages.empty:
+            x.append(gold_medal_ages)
+            name.append(sport)
+    
+    # Create a new figure
+    fig = go.Figure()
+    
+    # Add KDE traces for each sport
+    for ages, sport_name in zip(x, name):
+        # Use Plotly Express to get KDE data
+        kde_data = px.line(x=ages, y='density').data[0]
+        fig.add_trace(go.Scatter(x=kde_data.x, y=kde_data.y, mode='lines', name=sport_name))
+    
+    # Update layout to customize the plot
+    fig.update_layout(title='Distribution of Age of Gold Medalists by Sport',
+                      xaxis_title='Age',
+                      yaxis_title='Density',
+                      autosize=False,
+                      width=1000,
+                      height=600)
+    
+    # Show plot in Streamlit
+    st.title("Distribution of Age wrt Sports (Gold Medalist)")
     st.plotly_chart(fig)
+    
+
+    # x = []
+    # name = []
+    # famous_sports = ['Basketball', 'Judo', 'Football', 'Tug-Of-War', 'Athletics',
+    #                  'Swimming', 'Badminton', 'Sailing', 'Gymnastics',
+    #                  'Art Competitions', 'Handball', 'Weightlifting', 'Wrestling',
+    #                  'Water Polo', 'Hockey', 'Rowing', 'Fencing',
+    #                  'Shooting', 'Boxing', 'Taekwondo', 'Cycling', 'Diving', 'Canoeing',
+    #                  'Tennis', 'Golf', 'Softball', 'Archery',
+    #                  'Volleyball', 'Synchronized Swimming', 'Table Tennis', 'Baseball',
+    #                  'Rhythmic Gymnastics', 'Rugby Sevens',
+    #                  'Beach Volleyball', 'Triathlon', 'Rugby', 'Polo', 'Ice Hockey']
+    # for sport in famous_sports:
+    #     temp_df = athlete_df[athlete_df['Sport'] == sport]
+    #     x.append(temp_df[temp_df['Medal'] == 'Gold']['Age'].dropna())
+    #     name.append(sport)
+
+    # fig = ff.create_distplot(x, name, show_hist=False, show_rug=False)
+    # fig.update_layout(autosize=False, width=1000, height=600)
+    # st.title("Distribution of Age wrt Sports(Gold Medalist)")
+    # st.plotly_chart(fig)
 
     st.write("")
     st.write("")
